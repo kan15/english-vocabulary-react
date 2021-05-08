@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 
-
-import getResult from "../../api/getResult";
+import apiQueries from "../../api/apiQueries";
 
 export const WordsPage = () => {
+  const [wordsList, setWordsList] = useState([]);
+
+  console.log(wordsList);
 
   const showList = () => {
-    getResult();
+    apiQueries.getData(setWordsList);
+  }
+
+  const addNewWord = (eng, rus) => {
+    apiQueries.updateData(eng, rus);
   }
 
   return (
     <>
-      <h1>OLEG!!!!</h1>
+      <button onClick = {showList}>WORK!!!!</button>
     </>
   )
 }
