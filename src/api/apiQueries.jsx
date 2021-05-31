@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+// import firebase from "firebase";
 import "firebase/database";
 
 const firebaseConfig = {
@@ -27,22 +28,44 @@ const apiQueries = {
     listWords().on(
       "value",
       (data) => {
-        const mapedData = Object.values(data.val());
+        const serverData = data.val();
+        const mapedData = Object.keys(serverData).map((key) => {
+          serverData[key].isEdited = false;
+          return [key, serverData[key]];
+        });
         onResultFetched(mapedData);
       },
       errData
     );
   },
 
-  updateData(eng, rus) {
+  addItem(eng, rus) {
     const newWord = {
-      eng: eng,
-      rus: rus,
+      eng,
+      rus,
     };
     const newWordKey = firebase.database().ref().child("words").push().key;
     const updates = {};
-    updates["/words/" + newWordKey] = newWord;
+    updates[`/words/${newWordKey}`] = newWord;
     return firebase.database().ref().update(updates);
+  },
+
+  updateItem(key, eng, rus) {
+    const adaNameRef = firebase.database().ref(`words/${key}`);
+    adaNameRef.update({ eng, rus });
+  },
+
+  deleteItem(id) {
+    console.log(id);
+    const adaRef = firebase.database().ref(`words/${id}`);
+    adaRef
+      .remove()
+      .then(function () {
+        console.log("Remove succeeded.");
+      })
+      .catch(function (error) {
+        console.log(`Remove failed: ${error.message}`);
+      });
   },
 };
 
