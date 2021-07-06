@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Table from "react-bootstrap/Table";
+// import Table from "react-bootstrap/Table";
 import { WordItem } from "./WordItem";
+import "./WordList.css";
 
 export const WordsList = ({
   words,
@@ -11,35 +12,37 @@ export const WordsList = ({
   editWord,
   setVariableWord,
   updateWord,
+  prevEditedId,
 }) => {
   return (
-    <Table striped bordered hover variant="dark">
-      <thead>
+    <div className="table-container">
+      <table>
         <tr>
           <th>#</th>
           <th>Eng</th>
-          <th>Rus</th>
+          <th colSpan="2">Rus</th>
         </tr>
-      </thead>
-      <tbody>
-        {words.map((word, index) => {
-          return (
-            <WordItem
-              key={word[0]}
-              id={word[0]}
-              word={word[1]}
-              variableWord={variableWord}
-              index={+(index + 1)}
-              removeWord={removeWord}
-              onToggleStateEdit={onToggleStateEdit}
-              editWord={editWord}
-              setVariableWord={setVariableWord}
-              updateWord={updateWord}
-            />
-          );
-        })}
-      </tbody>
-    </Table>
+        <tbody>
+          {words.map((word, index) => {
+            return (
+              <WordItem
+                key={word[0]}
+                id={word[0]}
+                word={word[1]}
+                variableWord={variableWord}
+                index={+(index + 1)}
+                removeWord={removeWord}
+                onToggleStateEdit={onToggleStateEdit}
+                editWord={editWord}
+                setVariableWord={setVariableWord}
+                updateWord={updateWord}
+                prevEditedId={prevEditedId}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
@@ -51,4 +54,5 @@ WordsList.propTypes = {
   editWord: PropTypes.func.isRequired,
   setVariableWord: PropTypes.func.isRequired,
   updateWord: PropTypes.func.isRequired,
+  prevEditedId: PropTypes.instanceOf(Array).isRequired,
 };

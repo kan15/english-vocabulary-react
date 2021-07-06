@@ -1,4 +1,7 @@
 import React, { useRef } from "react";
+import { IconContext } from "react-icons";
+import { MdModeEdit, MdDeleteForever, MdCheck, MdCancel } from "react-icons/md";
+import "./WordItem.css";
 
 export const WordItem = ({
   id,
@@ -9,6 +12,7 @@ export const WordItem = ({
   onToggleStateEdit,
   editWord,
   setVariableWord,
+  prevEditedId,
   updateWord,
 }) => {
   const displaySubmitBtn = useRef(false);
@@ -29,6 +33,20 @@ export const WordItem = ({
     showSubmitBtn();
   };
 
+  // eslint-disable-next-line no-shadow
+  const closeOtherOpenInputs = (id) => {
+    console.log("closeOtherOpenInputs function");
+    // eslint-disable-next-line no-unused-expressions
+    prevEditedId.current && onToggleStateEdit(prevEditedId.current);
+    // eslint-disable-next-line no-param-reassign
+    prevEditedId.current = id;
+  };
+
+  const cleanPrevEditedId = () => {
+    // eslint-disable-next-line no-param-reassign
+    prevEditedId.current = "";
+  };
+
   const renderEditView = () => (
     <tr>
       <td>{index}</td>
@@ -47,26 +65,36 @@ export const WordItem = ({
           onChange={handleChange}
           name="rus"
         />
+      </td>
+      <td>
         <button
+          title="Don't save"
           type="button"
           onClick={() => {
             onToggleStateEdit(id);
-            hideSubmitBtn();
+            cleanPrevEditedId();
           }}
+          className="button button-cancel"
         >
-          Cancel
+          <IconContext.Provider value={{ color: "#4d4d00" }}>
+            <MdCancel />
+          </IconContext.Provider>
         </button>
-        {displaySubmitBtn.current ? (
+        {displaySubmitBtn.current && (
           <button
+            title="Save"
             type="button"
             onClick={() => {
               updateWord();
               hideSubmitBtn();
             }}
+            className="button button-submit"
           >
-            Submit
+            <IconContext.Provider value={{ color: "#102310" }}>
+              <MdCheck />
+            </IconContext.Provider>
           </button>
-        ) : null}
+        )}
       </td>
     </tr>
   );
@@ -75,19 +103,37 @@ export const WordItem = ({
     <tr>
       <td>{index}</td>
       <td>{word.eng}</td>
+      <td>{word.rus}</td>
       <td>
-        {word.rus}
-        <button type="button" onClick={() => removeWord(id)}>
-          Remove
-        </button>
         <button
+          title="Edit word"
           type="button"
           onClick={() => {
+            // eslint-disable-next-line no-unused-expressions
+            // const p = new Promise((resolve) => {
+            //   onToggleStateEdit(id);
+            //   resolve();
+            // });
+            // p.then(onToggleStateEdit).then(editWord).then(closeOtherOpenInputs);
             onToggleStateEdit(id);
             editWord(id);
+            closeOtherOpenInputs(id);
           }}
+          className="button button-edit"
         >
-          Edit
+          <IconContext.Provider value={{ color: "#661953" }}>
+            <MdModeEdit />
+          </IconContext.Provider>
+        </button>
+        <button
+          title="Delete word"
+          type="button"
+          onClick={() => removeWord(id)}
+          className="button button-remove"
+        >
+          <IconContext.Provider value={{ color: "#4d0f00" }}>
+            <MdDeleteForever />
+          </IconContext.Provider>
         </button>
       </td>
     </tr>
