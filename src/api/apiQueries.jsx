@@ -30,7 +30,6 @@ const apiQueries = {
       (data) => {
         const serverData = data.val();
         const mapedData = Object.keys(serverData).map((key) => {
-          serverData[key].isEdited = false;
           return [key, serverData[key]];
         });
         onResultFetched(mapedData);
