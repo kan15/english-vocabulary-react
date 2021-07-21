@@ -1,52 +1,55 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { EditingWord } from "./EditingWord";
-import { DefaultWord } from "./DefaultWord";
+import { IconContext } from "react-icons";
+import { MdModeEdit, MdDeleteForever } from "react-icons/md";
 import "./WordItem.css";
 
-import apiQueries from "../../api/apiQueries";
-
-export const WordItem = ({ id, word, index, removeWord, words }) => {
-  const [wordEditing, setWordEditing] = useState(false);
-  const [variableWord, setVariableWord] = useState([]);
-
-  const updateWord = () => {
-    apiQueries.updateItem(
-      variableWord[0],
-      variableWord[1].eng,
-      variableWord[1].rus
-    );
-  };
-
-  // eslint-disable-next-line no-shadow
-  const editWord = (id) => {
-    const idx = words.findIndex((el) => el[0] === id);
+export const WordItem = ({
+  id,
+  word,
+  index,
+  removeWord,
+  words,
+  setEditingId,
+  setVariableWord,
+}) => {
+  const editWord = (key) => {
+    const idx = words.findIndex((el) => el[0] === key);
     const oldItem = words[idx];
     setVariableWord(oldItem);
   };
 
   return (
-    <>
-      {wordEditing ? (
-        <EditingWord
-          id={id}
-          index={index}
-          variableWord={variableWord}
-          setVariableWord={setVariableWord}
-          updateWord={updateWord}
-          setWordEditing={setWordEditing}
-        />
-      ) : (
-        <DefaultWord
-          id={id}
-          word={word}
-          index={index}
-          removeWord={removeWord}
-          editWord={editWord}
-          setWordEditing={setWordEditing}
-        />
-      )}
-    </>
+    <tr>
+      <td>{index}</td>
+      <td>{word.eng}</td>
+      <td>{word.rus}</td>
+      <td>
+        <button
+          title="Edit word"
+          type="button"
+          onClick={() => {
+            editWord(id);
+            setEditingId(id);
+          }}
+          className="button button-edit"
+        >
+          <IconContext.Provider value={{ color: "#661953" }}>
+            <MdModeEdit />
+          </IconContext.Provider>
+        </button>
+        <button
+          title="Delete word"
+          type="button"
+          onClick={() => removeWord(id)}
+          className="button button-remove"
+        >
+          <IconContext.Provider value={{ color: "#4d0f00" }}>
+            <MdDeleteForever />
+          </IconContext.Provider>
+        </button>
+      </td>
+    </tr>
   );
 };
 
@@ -55,5 +58,7 @@ WordItem.propTypes = {
   word: PropTypes.instanceOf(Object).isRequired,
   index: PropTypes.number.isRequired,
   removeWord: PropTypes.func.isRequired,
+  setEditingId: PropTypes.func.isRequired,
   words: PropTypes.instanceOf(Array).isRequired,
+  setVariableWord: PropTypes.func.isRequired,
 };

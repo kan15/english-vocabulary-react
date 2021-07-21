@@ -4,15 +4,24 @@ import { IconContext } from "react-icons";
 import { MdCheck, MdCancel } from "react-icons/md";
 import "./WordItem.css";
 
+import apiQueries from "../../api/apiQueries";
+
 export const EditingWord = ({
   id,
   index,
   variableWord,
   setVariableWord,
-  updateWord,
-  setWordEditing,
+  setEditingId,
 }) => {
   const displaySubmitBtn = useRef(false);
+
+  const updateWord = () => {
+    apiQueries.updateItem(
+      variableWord[0],
+      variableWord[1].eng,
+      variableWord[1].rus
+    );
+  };
 
   const showSubmitBtn = () => {
     displaySubmitBtn.current = true;
@@ -28,6 +37,10 @@ export const EditingWord = ({
     onlyWord[name] = value;
     setVariableWord([id, onlyWord]);
     showSubmitBtn();
+  };
+
+  const hideEditingPanel = () => {
+    setEditingId("");
   };
 
   return (
@@ -54,7 +67,7 @@ export const EditingWord = ({
           title="Don't save"
           type="button"
           onClick={() => {
-            setWordEditing(false);
+            hideEditingPanel();
           }}
           className="button button-cancel"
         >
@@ -69,7 +82,7 @@ export const EditingWord = ({
             onClick={() => {
               updateWord();
               hideSubmitBtn();
-              setWordEditing(false);
+              hideEditingPanel();
             }}
             className="button button-submit"
           >
@@ -87,7 +100,6 @@ EditingWord.propTypes = {
   id: PropTypes.string.isRequired,
   variableWord: PropTypes.instanceOf(Array).isRequired,
   setVariableWord: PropTypes.func.isRequired,
-  updateWord: PropTypes.func.isRequired,
+  setEditingId: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  setWordEditing: PropTypes.func.isRequired,
 };
