@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { MdCheck, MdCancel } from "react-icons/md";
@@ -6,14 +6,9 @@ import "./WordItem.css";
 
 import apiQueries from "../../api/apiQueries";
 
-export const EditingWord = ({
-  id,
-  index,
-  variableWord,
-  setVariableWord,
-  setEditingId,
-}) => {
-  const displaySubmitBtn = useRef(false);
+export const EditableWord = ({ word, index, setEditingId }) => {
+  const [submitBtn, setSubmitBtn] = useState(false);
+  const [variableWord, setVariableWord] = useState(word);
 
   const updateWord = () => {
     apiQueries.updateItem(
@@ -24,23 +19,29 @@ export const EditingWord = ({
   };
 
   const showSubmitBtn = () => {
-    displaySubmitBtn.current = true;
+    setSubmitBtn(true);
   };
 
   const hideSubmitBtn = () => {
-    displaySubmitBtn.current = false;
+    setSubmitBtn(false);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const onlyWord = { ...variableWord[1] };
     onlyWord[name] = value;
-    setVariableWord([id, onlyWord]);
+    setVariableWord([word[0], onlyWord]);
     showSubmitBtn();
   };
 
   const hideEditingPanel = () => {
     setEditingId("");
+  };
+
+  const onSaveButtonClick = () => {
+    updateWord();
+    hideSubmitBtn();
+    hideEditingPanel();
   };
 
   return (
@@ -75,14 +76,12 @@ export const EditingWord = ({
             <MdCancel />
           </IconContext.Provider>
         </button>
-        {displaySubmitBtn.current && (
+        {submitBtn && (
           <button
             title="Save"
             type="button"
             onClick={() => {
-              updateWord();
-              hideSubmitBtn();
-              hideEditingPanel();
+              onSaveButtonClick();
             }}
             className="button button-submit"
           >
@@ -96,10 +95,8 @@ export const EditingWord = ({
   );
 };
 
-EditingWord.propTypes = {
-  id: PropTypes.string.isRequired,
-  variableWord: PropTypes.instanceOf(Array).isRequired,
-  setVariableWord: PropTypes.func.isRequired,
+EditableWord.propTypes = {
+  word: PropTypes.instanceOf(Array).isRequired,
   setEditingId: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
 };

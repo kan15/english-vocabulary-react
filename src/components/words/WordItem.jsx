@@ -5,33 +5,21 @@ import { MdModeEdit, MdDeleteForever } from "react-icons/md";
 import "./WordItem.css";
 
 export const WordItem = ({
-  id,
   word,
   index,
-  removeWord,
-  words,
-  setEditingId,
-  setVariableWord,
+  onDeleteButtonClick,
+  onEditButtonClick,
 }) => {
-  const editWord = (key) => {
-    const idx = words.findIndex((el) => el[0] === key);
-    const oldItem = words[idx];
-    setVariableWord(oldItem);
-  };
-
   return (
     <tr>
       <td>{index}</td>
-      <td>{word.eng}</td>
-      <td>{word.rus}</td>
+      <td>{word[1].eng}</td>
+      <td>{word[1].rus}</td>
       <td>
         <button
           title="Edit word"
           type="button"
-          onClick={() => {
-            editWord(id);
-            setEditingId(id);
-          }}
+          onClick={() => onEditButtonClick(word[0])}
           className="button button-edit"
         >
           <IconContext.Provider value={{ color: "#661953" }}>
@@ -41,7 +29,7 @@ export const WordItem = ({
         <button
           title="Delete word"
           type="button"
-          onClick={() => removeWord(id)}
+          onClick={() => onDeleteButtonClick(word[0])}
           className="button button-remove"
         >
           <IconContext.Provider value={{ color: "#4d0f00" }}>
@@ -54,11 +42,8 @@ export const WordItem = ({
 };
 
 WordItem.propTypes = {
-  id: PropTypes.string.isRequired,
-  word: PropTypes.instanceOf(Object).isRequired,
+  word: PropTypes.instanceOf(Array).isRequired,
   index: PropTypes.number.isRequired,
-  removeWord: PropTypes.func.isRequired,
-  setEditingId: PropTypes.func.isRequired,
-  words: PropTypes.instanceOf(Array).isRequired,
-  setVariableWord: PropTypes.func.isRequired,
+  onDeleteButtonClick: PropTypes.func.isRequired,
+  onEditButtonClick: PropTypes.func.isRequired,
 };

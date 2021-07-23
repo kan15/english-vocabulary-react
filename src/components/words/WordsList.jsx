@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { WordItem } from "./WordItem";
-import { EditingWord } from "./EditingWord";
+import { EditableWord } from "./EditableWord";
 import "./WordList.css";
 
 export const WordsList = ({ words, removeWord }) => {
   const [editingId, setEditingId] = useState("");
-  const [variableWord, setVariableWord] = useState([]);
 
   return (
     <div className="table-container">
@@ -19,24 +18,19 @@ export const WordsList = ({ words, removeWord }) => {
         <tbody>
           {words.map((word, index) => {
             return word[0] === editingId ? (
-              <EditingWord
+              <EditableWord
                 key={word[0]}
-                id={word[0]}
                 index={+(index + 1)}
-                variableWord={variableWord}
-                setVariableWord={setVariableWord}
+                word={word}
                 setEditingId={setEditingId}
               />
             ) : (
               <WordItem
                 key={word[0]}
-                id={word[0]}
-                word={word[1]}
+                word={word}
                 index={+(index + 1)}
-                removeWord={removeWord}
-                words={words}
-                setEditingId={setEditingId}
-                setVariableWord={setVariableWord}
+                onDeleteButtonClick={removeWord}
+                onEditButtonClick={setEditingId}
               />
             );
           })}

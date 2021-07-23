@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import "./Adding.css";
+import "./AddForm.css";
 
-export const Adding = ({ userWord, onUserWordChange, addNewWord }) => {
+export const AddForm = ({ addNewWord }) => {
+  const [userWord, setUserWord] = useState({ eng: "", rus: "" });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    onUserWordChange((prevState) => ({
+    setUserWord((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -14,7 +16,7 @@ export const Adding = ({ userWord, onUserWordChange, addNewWord }) => {
   const handleSubmit = (e) => {
     addNewWord(userWord);
     e.preventDefault();
-    onUserWordChange({ eng: "", rus: "" });
+    setUserWord({ eng: "", rus: "" });
   };
 
   return (
@@ -52,8 +54,6 @@ export const Adding = ({ userWord, onUserWordChange, addNewWord }) => {
   );
 };
 
-Adding.propTypes = {
-  userWord: PropTypes.instanceOf(Object).isRequired,
-  onUserWordChange: PropTypes.func.isRequired,
+AddForm.propTypes = {
   addNewWord: PropTypes.func.isRequired,
 };
