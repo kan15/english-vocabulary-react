@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { WordItem } from "./WordItem";
-import { EditableWord } from "./EditableWord";
+import { WordItem } from "./WordItem.tsx";
+import { EditableWord } from "./EditableWord.tsx";
 import "./WordList.css";
 
 export const WordsList = ({ words, removeWord }) => {

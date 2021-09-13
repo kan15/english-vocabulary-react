@@ -4,7 +4,7 @@ import { IconContext } from "react-icons";
 import { MdCheck, MdCancel } from "react-icons/md";
 import "./WordItem.css";
 
-import apiQueries from "../../api/apiQueries";
+import apiQueries from "../../api/apiQueries.tsx";
 
 export const EditableWord = ({ word, index, setEditingId }) => {
   const [submitBtn, setSubmitBtn] = useState(false);

@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 // import firebase from "firebase";
 import "firebase/database";
+// import { array } from 'prettier';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBr1PLF6Zdq_k2eLlR3HlgUApNGejrBNIA",
@@ -13,7 +14,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-const errData = (error) => {
+const errData = (error: string) => {
   console.log("Error!", error);
 };
 
@@ -24,7 +25,7 @@ const listWords = () => {
 };
 
 const apiQueries = {
-  getData(onResultFetched) {
+  getData(onResultFetched: (a: string[][]) => void) {
     listWords().on(
       "value",
       (data) => {
@@ -38,23 +39,23 @@ const apiQueries = {
     );
   },
 
-  addItem(eng, rus) {
+  addItem(eng: string, rus: string) {
     const newWord = {
       eng,
       rus,
     };
     const newWordKey = firebase.database().ref().child("words").push().key;
-    const updates = {};
+    const updates: { [index: string]: {} } = {};
     updates[`/words/${newWordKey}`] = newWord;
     return firebase.database().ref().update(updates);
   },
 
-  updateItem(key, eng, rus) {
+  updateItem(key: string, eng: string, rus: string) {
     const adaNameRef = firebase.database().ref(`words/${key}`);
     adaNameRef.update({ eng, rus });
   },
 
-  deleteItem(id) {
+  deleteItem(id: string) {
     console.log(id);
     const adaRef = firebase.database().ref(`words/${id}`);
     adaRef

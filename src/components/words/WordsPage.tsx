@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { WordsList } from "./WordsList";
-import { AddForm } from "../form/AddForm";
+import { WordsList } from "./WordsList.tsx";
+import { AddForm } from "../form/AddForm.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import apiQueries from "../../api/apiQueries";
+import apiQueries from "../../api/apiQueries.tsx";
 
 const addNewWord = (word) => {
   if (word.eng && word.rus) {
