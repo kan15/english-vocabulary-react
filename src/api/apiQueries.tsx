@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
-// import firebase from "firebase";
 import "firebase/database";
-// import { array } from 'prettier';
+// @ts-ignore
+import { Translation, Word } from "../Types/types.tsx";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBr1PLF6Zdq_k2eLlR3HlgUApNGejrBNIA",
@@ -20,44 +20,52 @@ const errData = (error: string) => {
 
 const listWords = () => {
   const database = firebase.database();
-  const words = database.ref("words");
-  return words;
+  return database.ref("words");
+};
+
+const mapWordsList = (data: firebase.database.DataSnapshot) => {
+  const serverData = data.val();
+  return Object.keys(serverData).map((key) => {
+    const translation = serverData[key] as Translation;
+    return {
+      ...translation,
+      key,
+    } as Word;
+  });
 };
 
 const apiQueries = {
-  getData(onResultFetched: (a: string[][]) => void) {
-    listWords().on(
-      "value",
-      (data) => {
-        const serverData = data.val();
-        const mapedData = Object.keys(serverData).map((key) => {
-          return [key, serverData[key]];
-        });
-        onResultFetched(mapedData);
-      },
-      errData
-    );
+  getData(): Promise<Word[]> {
+    return new Promise((resolve, reject) => {
+      listWords().on(
+        "value",
+        (data) => {
+          const words: Word[] = mapWordsList(data);
+          return resolve(words);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   },
 
-  addItem(eng: string, rus: string) {
-    const newWord = {
-      eng,
-      rus,
-    };
+  addItem(newWord: Translation) {
     const newWordKey = firebase.database().ref().child("words").push().key;
     const updates: { [index: string]: {} } = {};
     updates[`/words/${newWordKey}`] = newWord;
     return firebase.database().ref().update(updates);
   },
 
-  updateItem(key: string, eng: string, rus: string) {
-    const adaNameRef = firebase.database().ref(`words/${key}`);
-    adaNameRef.update({ eng, rus });
+  updateItem(newWord: Word) {
+    // todo: если нужно сделать, что приходит old word и new word. или только new word
+    const adaNameRef = firebase.database().ref(`words/${newWord.key}`);
+    adaNameRef.update({ eng: newWord.eng, rus: newWord.rus });
   },
 
-  deleteItem(id: string) {
-    console.log(id);
-    const adaRef = firebase.database().ref(`words/${id}`);
+  deleteItem(word: Word) {
+    console.log(word.key);
+    const adaRef = firebase.database().ref(`words/${word.key}`);
     adaRef
       .remove()
       .then(function () {

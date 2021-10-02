@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import PropTypes from "prop-types";
+// @ts-ignore
 import { WordItem } from "./WordItem.tsx";
+// @ts-ignore
 import { EditableWord } from "./EditableWord.tsx";
 import "./WordList.css";
+// @ts-ignore
+import { Word } from "../../Types/types.tsx";
 
-export const WordsList = ({ words, removeWord }) => {
-  const [editingId, setEditingId] = useState("");
+interface WordsListProps {
+  words: Word[];
+  removeWord: (word: Word) => void;
+}
+
+export const WordsList: FC<WordsListProps> = ({ words, removeWord }) => {
+  const [editingId, setEditingId] = useState<string>(""); //  todo как это можно сделать без передачи state в ребенка?
 
   return (
     <div className="table-container">
@@ -13,20 +22,20 @@ export const WordsList = ({ words, removeWord }) => {
         <tr>
           <th>#</th>
           <th>Eng</th>
-          <th colSpan="2">Rus</th>
+          <th colSpan={2}>Rus</th>
         </tr>
         <tbody>
           {words.map((word, index) => {
-            return word[0] === editingId ? (
+            return word.key === editingId ? (
               <EditableWord
-                key={word[0]}
+                key={word.key}
                 index={+(index + 1)}
                 word={word}
                 setEditingId={setEditingId}
               />
             ) : (
               <WordItem
-                key={word[0]}
+                key={word.key}
                 word={word}
                 index={+(index + 1)}
                 onDeleteButtonClick={removeWord}

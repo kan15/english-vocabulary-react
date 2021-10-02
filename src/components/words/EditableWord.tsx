@@ -1,21 +1,33 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { MdCheck, MdCancel } from "react-icons/md";
 import "./WordItem.css";
-
+// @ts-ignore
 import apiQueries from "../../api/apiQueries.tsx";
+// @ts-ignore
+import { Translation, Word } from "../../Types/types.tsx";
 
-export const EditableWord = ({ word, index, setEditingId }) => {
-  const [submitBtn, setSubmitBtn] = useState(false);
-  const [variableWord, setVariableWord] = useState(word);
+interface EditableWordProps {
+  word: Translation;
+  index: number;
+  setEditingId: (value: string | ((id: string) => string)) => void; // todo если не передавать state из родительского элемента - этого не будет
+}
+
+export const EditableWord: FC<EditableWordProps> = ({
+  word,
+  index,
+  setEditingId,
+}) => {
+  const [submitBtn, setSubmitBtn] = useState<boolean>(false);
+  const [variableWord, setVariableWord] = useState<Word>({
+    eng: "",
+    rus: "",
+    key: "",
+  });
 
   const updateWord = () => {
-    apiQueries.updateItem(
-      variableWord[0],
-      variableWord[1].eng,
-      variableWord[1].rus
-    );
+    apiQueries.updateItem(variableWord);
   };
 
   const showSubmitBtn = () => {
@@ -26,15 +38,17 @@ export const EditableWord = ({ word, index, setEditingId }) => {
     setSubmitBtn(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const onlyWord = { ...variableWord[1] };
-    onlyWord[name] = value;
-    setVariableWord([word[0], onlyWord]);
+    //  const onlyWord: Translation = { eng: variableWord.eng, rus: variableWord.rus};
+    const editingWord: Word = { ...variableWord };
+    editingWord[name] = value;
+    setVariableWord({ ...editingWord });
+    // setVariableWord({word[0], onlyWord]);
     showSubmitBtn();
   };
 
-  const hideEditingPanel = () => {
+  const hideEditingPanel = (): void => {
     setEditingId("");
   };
 
@@ -49,7 +63,7 @@ export const EditableWord = ({ word, index, setEditingId }) => {
       <td>{index}</td>
       <td>
         <input
-          value={variableWord[1].eng}
+          value={variableWord.eng}
           type="text"
           onChange={handleChange}
           name="eng"
@@ -57,7 +71,7 @@ export const EditableWord = ({ word, index, setEditingId }) => {
       </td>
       <td>
         <input
-          value={variableWord[1].rus}
+          value={variableWord.rus}
           type="text"
           onChange={handleChange}
           name="rus"

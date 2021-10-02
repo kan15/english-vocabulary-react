@@ -1,10 +1,20 @@
-import React from "react";
+import React, { FC } from "react";
 import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { MdModeEdit, MdDeleteForever } from "react-icons/md";
 import "./WordItem.css";
+// @ts-ignore
+import { Word } from "../../Types/types.tsx";
 
-export const WordItem = ({
+interface WordItemProps {
+  word: Word;
+  index: number;
+  // onDeleteButtonClick: (value: string | ((id: string) => string)) => void;
+  onDeleteButtonClick: (word: Word) => void;
+  onEditButtonClick: (value: string | ((id: string) => string)) => void; // todo если не передавать state из родительского элемента - этого не будет
+}
+
+export const WordItem: FC<WordItemProps> = ({
   word,
   index,
   onDeleteButtonClick,
@@ -13,13 +23,13 @@ export const WordItem = ({
   return (
     <tr>
       <td>{index}</td>
-      <td>{word[1].eng}</td>
-      <td>{word[1].rus}</td>
+      <td>{word.eng}</td>
+      <td>{word.rus}</td>
       <td>
         <button
           title="Edit word"
           type="button"
-          onClick={() => onEditButtonClick(word[0])}
+          onClick={() => onEditButtonClick(word.key)} // todo скорее всего нужно переделать как и onDeleteButton
           className="button button-edit"
         >
           <IconContext.Provider value={{ color: "#661953" }}>
@@ -29,7 +39,7 @@ export const WordItem = ({
         <button
           title="Delete word"
           type="button"
-          onClick={() => onDeleteButtonClick(word[0])}
+          onClick={() => onDeleteButtonClick(word)}
           className="button button-remove"
         >
           <IconContext.Provider value={{ color: "#4d0f00" }}>
@@ -42,7 +52,7 @@ export const WordItem = ({
 };
 
 WordItem.propTypes = {
-  word: PropTypes.instanceOf(Array).isRequired,
+  word: PropTypes.instanceOf(Object).isRequired,
   index: PropTypes.number.isRequired,
   onDeleteButtonClick: PropTypes.func.isRequired,
   onEditButtonClick: PropTypes.func.isRequired,

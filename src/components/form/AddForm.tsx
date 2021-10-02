@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./AddForm.css";
+// @ts-ignore
+import { Translation } from "../../Types/types.tsx";
 
-export const AddForm = ({ addNewWord }) => {
-  const [userWord, setUserWord] = useState({ eng: "", rus: "" });
+interface Props {
+  addNewWord: (word: Translation) => void;
+}
 
-  const handleChange = (e) => {
+export const AddForm: React.FC<Props> = ({ addNewWord }) => {
+  const [userWord, setUserWord] = useState<Translation>({ eng: "", rus: "" });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserWord((prevState) => ({
+    setUserWord((prevState: Translation) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     addNewWord(userWord);
     e.preventDefault();
     setUserWord({ eng: "", rus: "" });
