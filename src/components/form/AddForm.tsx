@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./AddForm.css";
-// @ts-ignore
-import { Translation } from "../../Types/types.tsx";
+import { Translation } from "../../Types/types";
 
 interface Props {
   addNewWord: (word: Translation) => void;

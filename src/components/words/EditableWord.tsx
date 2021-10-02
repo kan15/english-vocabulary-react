@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { MdCheck, MdCancel } from "react-icons/md";
 import "./WordItem.css";
-// @ts-ignore
-import apiQueries from "../../api/apiQueries.tsx";
-// @ts-ignore
-import { Translation, Word } from "../../Types/types.tsx";
+import apiQueries from "../../api/apiQueries";
+import { Translation, TranslationKeys, Word } from "../../Types/types";
 
 interface EditableWordProps {
   word: Translation;
@@ -18,7 +16,7 @@ export const EditableWord: FC<EditableWordProps> = ({
   word,
   index,
   setEditingId,
-}) => {
+}: EditableWordProps) => {
   const [submitBtn, setSubmitBtn] = useState<boolean>(false);
   const [variableWord, setVariableWord] = useState<Word>({
     eng: "",
@@ -38,13 +36,11 @@ export const EditableWord: FC<EditableWordProps> = ({
     setSubmitBtn(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    //  const onlyWord: Translation = { eng: variableWord.eng, rus: variableWord.rus};
-    const editingWord: Word = { ...variableWord };
-    editingWord[name] = value;
-    setVariableWord({ ...editingWord });
-    // setVariableWord({word[0], onlyWord]);
+  const onTranslationWordChange = (type: TranslationKeys, value: string) => {
+    setVariableWord({
+      ...variableWord,
+      [type]: value,
+    });
     showSubmitBtn();
   };
 
@@ -65,16 +61,14 @@ export const EditableWord: FC<EditableWordProps> = ({
         <input
           value={variableWord.eng}
           type="text"
-          onChange={handleChange}
-          name="eng"
+          onChange={(e) => onTranslationWordChange("eng", e.target.value)}
         />
       </td>
       <td>
         <input
           value={variableWord.rus}
           type="text"
-          onChange={handleChange}
-          name="rus"
+          onChange={(e) => onTranslationWordChange("rus", e.target.value)}
         />
       </td>
       <td>
@@ -107,10 +101,4 @@ export const EditableWord: FC<EditableWordProps> = ({
       </td>
     </tr>
   );
-};
-
-EditableWord.propTypes = {
-  word: PropTypes.instanceOf(Array).isRequired,
-  setEditingId: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
 };

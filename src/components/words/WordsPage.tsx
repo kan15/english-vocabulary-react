@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-// @ts-ignore
-import { WordsList } from "./WordsList.tsx";
-// @ts-ignore
-import { AddForm } from "../form/AddForm.tsx";
+
+import { WordsList } from "./WordsList";
+import { AddForm } from "../form/AddForm";
 import "bootstrap/dist/css/bootstrap.min.css";
-// @ts-ignore
-import apiQueries from "../../api/apiQueries.tsx";
-// @ts-ignore
-import { Word, Translation } from "../../Types/types.tsx";
+import apiQueries from "../../api/apiQueries";
+import { Word, Translation } from "../../Types/types";
 
 const addNewWord = (word: Translation) => {
   if (word.eng && word.rus) {
-    apiQueries.addItem(word.eng.trim(), word.rus.trim());
+    apiQueries.addItem({
+      eng: word.eng.trim(),
+      rus: word.rus.trim(),
+    });
   }
 };
 
@@ -34,7 +34,7 @@ type State =
 
 export const WordsPage = () => {
   const [state, setState] = useState<State>({
-    type: "loading"
+    type: "loading",
   });
 
   const showList = () => {
@@ -68,13 +68,36 @@ export const WordsPage = () => {
   }, [state]);
 
   const removeWord = (word: Word) => {
-    apiQueries.deleteItem(word.key);
+    apiQueries.deleteItem(word);
   };
 
-  return (
-    <>
-      <AddForm addNewWord={addNewWord} />
-      {(state.type === "loaded")} && (<WordsList words={state.wordsList} removeWord={removeWord} />)
-    </>
-  );
+  switch (state.type) {
+    case "loading":
+      return (
+        <>
+          <AddForm addNewWord={addNewWord} />
+          <div>Loading...</div>
+        </>
+      );
+
+    case "loaded":
+      return (
+        <>
+          <AddForm addNewWord={addNewWord} />
+          <WordsList words={state.wordsList} removeWord={removeWord} />
+        </>
+      );
+
+    case "error":
+      return (
+        <>
+          <AddForm addNewWord={addNewWord} />
+          <div>Server error</div>
+          <button type="button">Reload data</button>
+        </>
+      );
+
+    default:
+      return notReachable(state);
+  }
 };

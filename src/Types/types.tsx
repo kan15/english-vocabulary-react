@@ -1,9 +1,10 @@
 export type Translation = {
-    eng: string;
-    rus: string;
-    [index: string]: string;
+  eng: string;
+  rus: string;
 };
 
+export type TranslationKeys = keyof Translation;
+
 export type Word = Translation & {
-    key: string;
+  key: string;
 };

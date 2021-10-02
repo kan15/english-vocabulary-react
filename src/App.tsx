@@ -1,6 +1,5 @@
 import React from "react";
-// @ts-ignore
-import { WordsPage } from "./components/words/WordsPage.tsx";
+import { WordsPage } from "./components/words/WordsPage";
 
 const App: React.FC = () => {
   return <WordsPage />;

@@ -1,7 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/database";
-// @ts-ignore
-import { Translation, Word } from "../Types/types.tsx";
+import { Translation, Word } from "../Types/types";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBr1PLF6Zdq_k2eLlR3HlgUApNGejrBNIA",

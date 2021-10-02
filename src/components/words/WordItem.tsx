@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { MdModeEdit, MdDeleteForever } from "react-icons/md";
 import "./WordItem.css";
-// @ts-ignore
-import { Word } from "../../Types/types.tsx";
+import { Word } from "../../Types/types";
 
 interface WordItemProps {
   word: Word;
@@ -19,7 +18,7 @@ export const WordItem: FC<WordItemProps> = ({
   index,
   onDeleteButtonClick,
   onEditButtonClick,
-}) => {
+}: WordItemProps) => {
   return (
     <tr>
       <td>{index}</td>
@@ -49,11 +48,4 @@ export const WordItem: FC<WordItemProps> = ({
       </td>
     </tr>
   );
-};
-
-WordItem.propTypes = {
-  word: PropTypes.instanceOf(Object).isRequired,
-  index: PropTypes.number.isRequired,
-  onDeleteButtonClick: PropTypes.func.isRequired,
-  onEditButtonClick: PropTypes.func.isRequired,
 };

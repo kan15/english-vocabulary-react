@@ -1,19 +1,19 @@
 import React, { FC, useState } from "react";
 import PropTypes from "prop-types";
-// @ts-ignore
-import { WordItem } from "./WordItem.tsx";
-// @ts-ignore
-import { EditableWord } from "./EditableWord.tsx";
+import { WordItem } from "./WordItem";
+import { EditableWord } from "./EditableWord";
 import "./WordList.css";
-// @ts-ignore
-import { Word } from "../../Types/types.tsx";
+import { Word } from "../../Types/types";
 
 interface WordsListProps {
   words: Word[];
   removeWord: (word: Word) => void;
 }
 
-export const WordsList: FC<WordsListProps> = ({ words, removeWord }) => {
+export const WordsList: FC<WordsListProps> = ({
+  words,
+  removeWord,
+}: WordsListProps) => {
   const [editingId, setEditingId] = useState<string>(""); //  todo как это можно сделать без передачи state в ребенка?
 
   return (
@@ -47,9 +47,4 @@ export const WordsList: FC<WordsListProps> = ({ words, removeWord }) => {
       </table>
     </div>
   );
-};
-
-WordsList.propTypes = {
-  words: PropTypes.instanceOf(Array).isRequired,
-  removeWord: PropTypes.func.isRequired,
 };
