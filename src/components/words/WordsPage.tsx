@@ -19,7 +19,7 @@ const notReachable = (state: never): never => {
   throw new Error(state);
 };
 
-type State =
+export type State =
   | {
       type: "loading";
     }
@@ -84,7 +84,11 @@ export const WordsPage = () => {
       return (
         <>
           <AddForm addNewWord={addNewWord} />
-          <WordsList words={state.wordsList} removeWord={removeWord} />
+          <WordsList
+            changeType={setState}
+            words={state.wordsList}
+            removeWord={removeWord}
+          />
         </>
       );
 

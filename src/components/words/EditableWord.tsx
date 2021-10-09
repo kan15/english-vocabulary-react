@@ -3,30 +3,27 @@ import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { MdCheck, MdCancel } from "react-icons/md";
 import "./WordItem.css";
-import apiQueries from "../../api/apiQueries";
-import { Translation, TranslationKeys, Word } from "../../Types/types";
+import { TranslationKeys, Word } from "../../Types/types";
 
 interface EditableWordProps {
-  word: Translation;
+  word: Word;
   index: number;
-  setEditingId: (value: string | ((id: string) => string)) => void; // todo если не передавать state из родительского элемента - этого не будет
+  onSaveButtonClick: (value: Word) => void;
+  dontSaveButtonClick: () => void;
 }
 
 export const EditableWord: FC<EditableWordProps> = ({
   word,
   index,
-  setEditingId,
+  onSaveButtonClick,
+  dontSaveButtonClick,
 }: EditableWordProps) => {
   const [submitBtn, setSubmitBtn] = useState<boolean>(false);
   const [variableWord, setVariableWord] = useState<Word>({
-    eng: "",
-    rus: "",
-    key: "",
+    eng: word.eng,
+    rus: word.rus,
+    key: word.key,
   });
-
-  const updateWord = () => {
-    apiQueries.updateItem(variableWord);
-  };
 
   const showSubmitBtn = () => {
     setSubmitBtn(true);
@@ -44,14 +41,9 @@ export const EditableWord: FC<EditableWordProps> = ({
     showSubmitBtn();
   };
 
-  const hideEditingPanel = (): void => {
-    setEditingId("");
-  };
-
-  const onSaveButtonClick = () => {
-    updateWord();
+  const onLocalSaveButtonClick = (value: Word) => {
+    onSaveButtonClick(value);
     hideSubmitBtn();
-    hideEditingPanel();
   };
 
   return (
@@ -76,7 +68,7 @@ export const EditableWord: FC<EditableWordProps> = ({
           title="Don't save"
           type="button"
           onClick={() => {
-            hideEditingPanel();
+            dontSaveButtonClick();
           }}
           className="button button-cancel"
         >
@@ -89,7 +81,7 @@ export const EditableWord: FC<EditableWordProps> = ({
             title="Save"
             type="button"
             onClick={() => {
-              onSaveButtonClick();
+              onLocalSaveButtonClick(variableWord);
             }}
             className="button button-submit"
           >

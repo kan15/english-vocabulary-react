@@ -57,7 +57,6 @@ const apiQueries = {
   },
 
   updateItem(newWord: Word) {
-    // todo: если нужно сделать, что приходит old word и new word. или только new word
     const adaNameRef = firebase.database().ref(`words/${newWord.key}`);
     adaNameRef.update({ eng: newWord.eng, rus: newWord.rus });
   },

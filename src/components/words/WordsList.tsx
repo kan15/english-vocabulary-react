@@ -1,20 +1,27 @@
 import React, { FC, useState } from "react";
-import PropTypes from "prop-types";
 import { WordItem } from "./WordItem";
 import { EditableWord } from "./EditableWord";
 import "./WordList.css";
 import { Word } from "../../Types/types";
+import apiQueries from "../../api/apiQueries";
+import { State } from "./WordsPage";
 
 interface WordsListProps {
   words: Word[];
   removeWord: (word: Word) => void;
+  changeType: (type: State) => void;
 }
+
+const updateWord = (word: Word) => {
+  apiQueries.updateItem(word);
+};
 
 export const WordsList: FC<WordsListProps> = ({
   words,
   removeWord,
+  changeType,
 }: WordsListProps) => {
-  const [editingId, setEditingId] = useState<string>(""); //  todo как это можно сделать без передачи state в ребенка?
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   return (
     <div className="table-container">
@@ -31,7 +38,14 @@ export const WordsList: FC<WordsListProps> = ({
                 key={word.key}
                 index={+(index + 1)}
                 word={word}
-                setEditingId={setEditingId}
+                onSaveButtonClick={(value: Word) => {
+                  setEditingId(null);
+                  updateWord(value);
+                  changeType({ type: "loading" });
+                }}
+                dontSaveButtonClick={() => {
+                  setEditingId(null);
+                }}
               />
             ) : (
               <WordItem
@@ -39,7 +53,9 @@ export const WordsList: FC<WordsListProps> = ({
                 word={word}
                 index={+(index + 1)}
                 onDeleteButtonClick={removeWord}
-                onEditButtonClick={setEditingId}
+                onEditButtonClick={() => {
+                  setEditingId(word.key);
+                }}
               />
             );
           })}

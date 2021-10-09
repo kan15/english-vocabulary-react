@@ -8,9 +8,8 @@ import { Word } from "../../Types/types";
 interface WordItemProps {
   word: Word;
   index: number;
-  // onDeleteButtonClick: (value: string | ((id: string) => string)) => void;
   onDeleteButtonClick: (word: Word) => void;
-  onEditButtonClick: (value: string | ((id: string) => string)) => void; // todo если не передавать state из родительского элемента - этого не будет
+  onEditButtonClick: () => void;
 }
 
 export const WordItem: FC<WordItemProps> = ({
@@ -28,7 +27,7 @@ export const WordItem: FC<WordItemProps> = ({
         <button
           title="Edit word"
           type="button"
-          onClick={() => onEditButtonClick(word.key)} // todo скорее всего нужно переделать как и onDeleteButton
+          onClick={() => onEditButtonClick()}
           className="button button-edit"
         >
           <IconContext.Provider value={{ color: "#661953" }}>
